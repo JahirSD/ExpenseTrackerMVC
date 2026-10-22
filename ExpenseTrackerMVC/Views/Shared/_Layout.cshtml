@@ -1,0 +1,540 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - Expense Tracker</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ExpenseTrackerMVC.styles.css" asp-append-version="true" />
+
+    <style>
+
+            /* FULL SCREEN LAYOUT */
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                background-color: #f4f6f9;
+                font-family: 'Segoe UI', sans-serif;
+            }
+
+            /* NAVBAR */
+            header {
+                flex-shrink: 0;
+            }
+
+            .custom-navbar {
+                background: linear-gradient(90deg, #0d6efd, #6610f2);
+                padding: 5px 15px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .navbar-brand {
+                color: white !important;
+                font-size: 21px;
+                font-weight: 700;
+            }
+
+            .navbar-nav {
+                align-items: center;
+            }
+
+            .nav-link {
+                color: white !important;
+                font-size: 13px;
+                font-weight: 500;
+                margin-right: 3px;
+                padding: 6px 9px !important;
+                border-radius: 7px;
+            }
+
+                .nav-link:hover {
+                    background: rgba(255, 255, 255, 0.15);
+                }
+
+            /* MAIN CONTENT AREA */
+            .content-wrapper {
+                flex: 1;
+                min-height: 0;
+                overflow: hidden;
+                padding: 12px 0;
+            }
+
+                .content-wrapper > .container {
+                    height: 100%;
+                }
+
+            .main-container {
+                height: 100%;
+                min-height: 0;
+                overflow-y: auto;
+                overflow-x: hidden;
+                background: white;
+                padding: 15px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            }
+
+            /* COMPACT FOOTER */
+            .custom-footer {
+                flex-shrink: 0;
+                background: #111827;
+                color: white;
+                padding: 8px 0 5px;
+                margin-top: 0;
+            }
+
+            .footer-company {
+                font-size: 15px;
+                font-weight: 700;
+                color: #00c6ff;
+                margin-bottom: 3px;
+            }
+
+            .footer-heading {
+                font-size: 12px;
+                font-weight: 600;
+                color: #00e5ff;
+                margin-bottom: 3px;
+            }
+
+            .footer-text {
+                font-size: 10px;
+                color: #d1d5db;
+                margin-bottom: 2px;
+            }
+
+            .footer-links {
+                margin-top: 2px;
+            }
+
+                .footer-links a {
+                    display: inline-block;
+                    margin: 2px 5px;
+                    color: #cbd5e1;
+                    text-decoration: none;
+                    font-size: 10px;
+                }
+
+                    .footer-links a:hover {
+                        color: white;
+                    }
+
+            .footer-line {
+                border-color: rgba(255, 255, 255, 0.1);
+                margin: 5px 0;
+            }
+
+            .footer-copy {
+                font-size: 10px;
+                color: #9ca3af;
+            }
+
+            /* MOBILE */
+            @@media (max-width: 768px) {
+                .navbar-brand {
+                    font-size: 17px;
+                }
+
+                .content-wrapper {
+                    padding: 6px 0;
+                }
+
+                .main-container {
+                    padding: 10px;
+                }
+                /* Save screen space on mobile */
+                .custom-footer {
+                    padding: 5px 0;
+                }
+
+                    .custom-footer .row > div {
+                        display: none;
+                    }
+
+                .footer-line {
+                    display: none;
+                }
+
+                .footer-copy {
+                    font-size: 9px;
+                }
+            }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header>
+
+        <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+
+            <div class="container-fluid">
+
+                <a class="navbar-brand"
+                   asp-area=""
+                   asp-controller="Home"
+                   asp-action="Index">
+
+                    💰 Expense Tracker
+
+                </a>
+
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarContent">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+                <div class="collapse navbar-collapse"
+                     id="navbarContent">
+
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Home"
+                               asp-action="Index">
+
+                                Home
+
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Expenses"
+                               asp-action="Index">
+
+                               Daily Expenses
+
+                            </a>
+                        </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Employees"
+                                   asp-action="Index">
+
+                                    Employees
+
+                                </a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="DailyEntries"
+                                   asp-action="Index">
+
+                                    Daily Entry
+
+                                </a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="EmployeeExpenses"
+                                   asp-action="Index">
+
+                                    Employee Expenses
+
+                                </a>
+                            </li>
+                        }
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Reports"
+                               asp-action="Index">
+
+                                Reports
+
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Reports"
+                               asp-action="Monthly">
+
+                                Monthly Report
+
+                            </a>
+                        </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="ExpenseTypes"
+                                   asp-action="Index">
+
+                                    Expense Type
+
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+
+                    <partial name="_LoginPartial" />
+
+                </div>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+    <!-- MAIN BODY -->
+
+    <div class="content-wrapper">
+        <div class="container">
+            <main role="main" class="main-container">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+
+    <footer class="custom-footer">
+
+        <div class="container">
+
+            <div class="row align-items-center text-center text-md-start">
+
+                <!-- COMPANY DETAILS -->
+
+                <div class="col-md-4 mb-4 mb-md-0">
+
+                    <div class="footer-company">
+
+                        JK Software Solutions
+
+                    </div>
+
+                    <div class="footer-text">
+
+                        Expense Tracker Management System
+
+                    </div>
+
+                    <div class="footer-text">
+
+                        Smart Employee Expense & Report Management
+
+                    </div>
+
+                </div>
+
+                <!-- CONTACT DETAILS -->
+
+                <div class="col-md-4 mb-4 mb-md-0 text-center">
+
+                    <div class="footer-heading">
+
+                        Contact Information
+
+                    </div>
+
+                    <div class="footer-text">
+
+                        📞 +91 75025 87362
+
+                    </div>
+
+                    <div class="footer-text">
+
+                        📧 jksoftwaresolutions@gmail.com
+
+                    </div>
+
+                    <div class="footer-text">
+
+                        🌐 www.jksoftwaresolutions.com
+
+                    </div>
+
+                    <div class="footer-text">
+
+                        📍 Chennai, Tamil Nadu, India
+
+                    </div>
+
+                </div>
+
+                <!-- QUICK LINKS -->
+
+                <div class="col-md-4 text-md-end text-center">
+
+                    <div class="footer-heading">
+
+                        Quick Links
+
+                    </div>
+
+                    <div class="footer-links">
+
+                        <a asp-controller="Home"
+                           asp-action="Index">
+
+                            Home
+
+                        </a>
+
+                        <a asp-controller="Home"
+                           asp-action="Privacy">
+
+                            Privacy
+
+                        </a>
+
+                        <a href="#">
+
+                            About Us
+
+                        </a>
+
+                        <a href="#">
+
+                            Contact
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr class="footer-line" />
+
+            <!-- COPYRIGHT -->
+
+            <div class="text-center footer-copy">
+
+                © 2026 JK Software Solutions |
+                All Rights Reserved |
+                Developed with ASP.NET Core MVC
+
+            </div>
+
+        </div>
+
+    </footer>
+
+   @*  <style>
+
+        .custom-footer {
+            background: #111827;
+            color: white;
+            padding: 30px 0 15px;
+            margin-top: 40px;
+        }
+
+        .footer-company {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00c6ff;
+            margin-bottom: 8px;
+        }
+
+        .footer-heading {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #00e5ff;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #d1d5db;
+            margin-bottom: 6px;
+        }
+
+        .footer-links a {
+            display: inline-block;
+            margin: 5px 8px;
+            color: #d1d5db;
+            text-decoration: none;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+            .footer-links a:hover {
+                color: white;
+            }
+
+        .footer-line {
+            border-color: rgba(255,255,255,0.1);
+            margin: 20px 0 12px;
+        }
+
+        .footer-copy {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        @@media(max-width:768px) {
+
+            .custom-footer {
+                padding: 20px 10px;
+            }
+
+            .footer-company {
+                font-size: 17px;
+            }
+
+            .footer-heading {
+                margin-top: 10px;
+            }
+
+            .footer-links {
+                margin-top: 10px;
+            }
+
+                .footer-links a {
+                    display: inline-block;
+                    margin: 5px;
+                }
+        }
+
+    </style> *@
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

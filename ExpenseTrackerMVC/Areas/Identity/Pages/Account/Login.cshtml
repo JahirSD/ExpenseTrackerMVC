@@ -1,0 +1,238 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<style>
+
+    body {
+        background: linear-gradient(135deg, #0d6efd, #6610f2);
+        min-height: 100vh;
+    }
+
+    .login-container {
+        min-height: 90vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 450px;
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .login-title {
+        text-align: center;
+        font-size: 38px;
+        font-weight: bold;
+        color: #0d6efd;
+        margin-bottom: 10px;
+    }
+
+    .login-subtitle {
+        text-align: center;
+        font-size: 18px;
+        color: #6c757d;
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        height: 50px;
+        border-radius: 10px;
+        border: 1px solid #ced4da;
+        padding-left: 15px;
+        background-color: #f8f9fa;
+        color: black;
+    }
+
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 8px rgba(13,110,253,0.3);
+            background-color: white;
+            color: black;
+        }
+
+    .btn-login {
+        height: 50px;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        background: linear-gradient(90deg, #00c6ff, #0072ff);
+        border: none;
+        transition: 0.3s;
+    }
+
+        .btn-login:hover {
+            transform: scale(1.02);
+            opacity: 0.95;
+        }
+
+    .remember-check {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        color: black;
+    }
+
+    .login-links {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+        .login-links a {
+            color: #0d6efd;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .login-links a:hover {
+                text-decoration: underline;
+            }
+
+</style>
+
+<div class="login-container">
+
+    <div class="login-card">
+
+        <div class="login-title">
+            Welcome Back
+        </div>
+
+        <div class="login-subtitle">
+            Login Your Account
+        </div>
+
+        <form id="account" method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-warning mb-3">
+            </div>
+
+            <!-- EMAIL -->
+
+            <div class="mb-3">
+
+                <label asp-for="Input.Email"
+                       class="form-label">
+                    Email Address
+                </label>
+
+                <input asp-for="Input.Email"
+                       class="form-control"
+                       autocomplete="username"
+                       placeholder="Enter your User Name" />
+
+                <span asp-validation-for="Input.Email"
+                      class="text-warning">
+                </span>
+
+            </div>
+
+            <!-- PASSWORD -->
+
+            <div class="mb-3">
+
+                <label asp-for="Input.Password"
+                       class="form-label">
+                    Password
+                </label>
+
+                <input asp-for="Input.Password"
+                       type="password"
+                       class="form-control"
+                       autocomplete="current-password"
+                       placeholder="Enter your password" />
+
+                <span asp-validation-for="Input.Password"
+                      class="text-warning">
+                </span>
+
+            </div>
+
+            <!-- REMEMBER -->
+
+            <div class="form-check remember-check">
+
+                <input class="form-check-input"
+                       asp-for="Input.RememberMe" />
+
+                <label class="form-check-label"
+                       asp-for="Input.RememberMe">
+
+                    Remember Me
+
+                </label>
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <button id="login-submit"
+                    type="submit"
+                    class="w-100 btn btn-primary btn-login">
+
+                Login
+
+            </button>
+
+            <!-- LINKS -->
+
+            <div class="login-links">
+
+                <p class="mt-3">
+
+                    <a id="forgot-password"
+                       asp-page="./ForgotPassword">
+
+                        Forgot Password?
+
+                    </a>
+
+                </p>
+
+                <p>
+
+                    <a asp-page="./Register"
+                       asp-route-returnUrl="@Model.ReturnUrl">
+
+                        Create New Account
+
+                    </a>
+
+                </p>
+
+                <p>
+
+                    <a id="resend-confirmation"
+                       asp-page="./ResendEmailConfirmation">
+
+                        Resend Email Confirmation
+
+                    </a>
+
+                </p>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

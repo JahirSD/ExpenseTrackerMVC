@@ -1,0 +1,271 @@
+﻿@model IEnumerable<ExpenseTrackerMVC.Models.EmployeeExpense>
+
+@{
+    ViewData["Title"] = "Monthly Report";
+
+    var employees = ViewBag.Employees as List<ExpenseTrackerMVC.Models.Employee>;
+
+    var expenseTypes = ViewBag.ExpenseTypes as List<ExpenseTrackerMVC.Models.ExpenseType>;
+}
+
+<style>
+
+    body {
+        background-color: #f4f7fc;
+    }
+
+    /* HEADER */
+
+    .report-header {
+        background: linear-gradient(135deg, #00c853, #009688);
+        padding: 20px;
+        border-radius: 15px;
+        color: white;
+        margin-bottom: 20px;
+        box-shadow: 0px 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .report-title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 3px;
+    }
+
+    .report-subtitle {
+        font-size: 13px;
+        opacity: 0.9;
+    }
+
+    /* TABLE CARD */
+
+    .table-card {
+        background: white;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0px 4px 15px rgba(0,0,0,0.06);
+    }
+
+    /* TABLE */
+
+    .report-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 6px;
+        margin-bottom: 0;
+    }
+
+        .report-table thead tr {
+            background: linear-gradient(90deg, #00c853, #009688);
+        }
+
+        .report-table th {
+            color: white;
+            padding: 12px;
+            text-align: center;
+            border: none;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .report-table tbody tr {
+            background: white;
+            transition: 0.2s;
+            box-shadow: 0px 2px 8px rgba(0,0,0,0.04);
+        }
+
+            .report-table tbody tr:hover {
+                background-color: #f8fffb;
+            }
+
+        .report-table td {
+            padding: 12px;
+            text-align: center;
+            vertical-align: middle;
+            border-top: none;
+            font-size: 13px;
+        }
+
+    /* EMPLOYEE COLUMN */
+
+    .employee-column {
+        background: #e8f5e9;
+        font-weight: 600;
+        color: #1b5e20;
+        border-radius: 8px 0 0 8px;
+        min-width: 140px;
+        font-size: 13px;
+    }
+
+    /* AMOUNT BADGE */
+
+    .amount-badge {
+        background: #e3f2fd;
+        color: #0d6efd;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-weight: 600;
+        display: inline-block;
+        min-width: 60px;
+        font-size: 12px;
+    }
+
+    .empty-amount {
+        color: #adb5bd;
+        font-weight: 600;
+        font-size: 12px;
+    }
+
+    /* TOTAL COLUMN */
+
+    .total-column {
+        background: linear-gradient(90deg, #00c853, #20c997);
+        color: white;
+        font-weight: 700;
+        font-size: 13px;
+        border-radius: 0 8px 8px 0;
+        min-width: 90px;
+    }
+
+    /* MOBILE */
+
+    @@media(max-width:768px) {
+
+        .report-title {
+            font-size: 22px;
+        }
+
+        .report-subtitle {
+            font-size: 11px;
+        }
+
+        .report-table th,
+        .report-table td {
+            padding: 8px;
+            font-size: 11px;
+        }
+
+        .employee-column {
+            min-width: 100px;
+            font-size: 11px;
+        }
+
+        .table-card {
+            padding: 8px;
+        }
+
+        .amount-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+        }
+    }
+
+</style>
+
+<div class="container-fluid mt-4">
+
+    <!-- HEADER -->
+
+    <div class="report-header text-center">
+
+        <div class="report-title">
+            📊 Monthly Expense Report
+        </div>
+
+        <div class="report-subtitle">
+            Employee Monthly Expense Summary
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+
+    <div class="table-card">
+
+        <div class="table-responsive">
+
+            <table class="table report-table align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            👨‍💼 Employee
+                        </th>
+
+                        @foreach (var type in expenseTypes)
+                        {
+                            <th>
+                                💰 @type.Name
+                            </th>
+                        }
+
+                        <th>
+                            ✅ Total
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var emp in employees)
+                    {
+                        decimal rowTotal = 0;
+
+                        <tr>
+
+                            <td class="employee-column">
+
+                                @emp.Name
+
+                            </td>
+
+                            @foreach (var type in expenseTypes)
+                            {
+                                var amount = Model
+                                .Where(x => x.EmployeeId == emp.Id
+                                && x.ExpenseTypeId == type.Id)
+                                .Sum(x => x.Amount);
+
+                                rowTotal += amount;
+
+                                <td>
+
+                                    @if (amount == 0)
+                                    {
+                                        <span class="empty-amount">
+                                            -
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="amount-badge">
+
+                                            ₹ @amount
+
+                                        </span>
+                                    }
+
+                                </td>
+                            }
+
+                            <td class="total-column">
+
+                                ₹ @rowTotal
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

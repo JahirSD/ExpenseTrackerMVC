@@ -1,0 +1,253 @@
+﻿@model ExpenseTrackerMVC.Models.ViewModels.ReportViewModel
+
+@{
+    ViewData["Title"] = "Daily Report";
+}
+
+<style>
+
+    body {
+        background-color: #f4f7fc;
+    }
+
+    /* PAGE HEADER */
+
+    .report-header {
+        background: linear-gradient(135deg, #0d6efd, #6610f2);
+        padding: 30px;
+        border-radius: 20px;
+        color: white;
+        margin-bottom: 30px;
+        box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .report-title {
+        font-size: 40px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .report-subtitle {
+        font-size: 16px;
+        opacity: 0.9;
+    }
+
+    /* TABLE CARD */
+
+    .table-card {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0px 5px 20px rgba(0,0,0,0.08);
+    }
+
+    /* TABLE */
+
+    .custom-table {
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+        .custom-table thead tr {
+            background: linear-gradient(90deg, #0d6efd, #6610f2);
+        }
+
+        .custom-table th {
+            color: white;
+            text-align: center;
+            padding: 18px;
+            font-size: 16px;
+            border: none;
+        }
+
+        .custom-table tbody tr {
+            background: white;
+            transition: 0.3s;
+            box-shadow: 0px 3px 10px rgba(0,0,0,0.05);
+        }
+
+            .custom-table tbody tr:hover {
+                transform: scale(1.01);
+                background-color: #f8fbff;
+            }
+
+        .custom-table td {
+            text-align: center;
+            padding: 16px;
+            vertical-align: middle;
+            border-top: none;
+            font-size: 15px;
+        }
+
+    /* DATE COLUMN */
+
+    .date-column {
+        background-color: #fff3cd !important;
+        font-weight: bold;
+        color: #856404;
+        border-radius: 10px 0 0 10px;
+    }
+
+    /* VALUE STYLE */
+
+    .value-badge {
+        background: #e7f1ff;
+        color: #0d6efd;
+        padding: 6px 14px;
+        border-radius: 30px;
+        font-weight: bold;
+        display: inline-block;
+        min-width: 60px;
+    }
+
+    /* TOTAL ROW */
+
+    .total-row td {
+        background: linear-gradient(90deg, #198754, #20c997) !important;
+        color: white;
+        font-weight: bold;
+        font-size: 17px;
+        border: none;
+    }
+
+    .total-label {
+        border-radius: 10px 0 0 10px;
+    }
+
+    .total-end {
+        border-radius: 0 10px 10px 0;
+    }
+
+    /* MOBILE */
+
+    @@media(max-width:768px) {
+
+        .report-title {
+            font-size: 28px;
+        }
+
+        .custom-table th,
+        .custom-table td {
+            font-size: 13px;
+            padding: 10px;
+        }
+
+        .table-card {
+            padding: 10px;
+        }
+    }
+
+</style>
+
+<div class="container-fluid mt-4">
+
+    <!-- HEADER -->
+
+    <div class="report-header text-center">
+
+        <div class="report-title">
+            📊 Bus Fare Daily Report
+        </div>
+
+        <div class="report-subtitle">
+            Employee Daily Bus Fare Summary Report
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+
+    <div class="table-card">
+
+        <div class="table-responsive">
+
+            <table class="table custom-table align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            📅 Date
+                        </th>
+
+                        @foreach (var emp in Model.Employees)
+                        {
+                            <th>
+                                👨‍💼 @emp.Name
+                            </th>
+                        }
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var date in Model.Dates)
+                    {
+                        <tr>
+
+                            <td class="date-column">
+
+                                @date.ToString("dd-MM-yyyy")
+
+                            </td>
+
+                            @foreach (var emp in Model.Employees)
+                            {
+                                var entry = Model.Entries
+                                .FirstOrDefault(x =>
+                                x.Date.Date == date.Date &&
+                                x.EmployeeId == emp.Id);
+
+                                <td>
+
+                                    <span class="value-badge">
+
+                                        ₹ @(entry != null ? entry.Value : 0)
+
+                                    </span>
+
+                                </td>
+                            }
+
+                        </tr>
+                    }
+
+                    <!-- TOTAL ROW -->
+
+                    <tr class="total-row">
+
+                        <td class="total-label">
+
+                            💰 Total
+
+                        </td>
+
+                        @foreach (var emp in Model.Employees)
+                        {
+                            var total = Model.Entries
+                            .Where(x => x.EmployeeId == emp.Id)
+                            .Sum(x => x.Value);
+
+                            <td>
+
+                                ₹ @total
+
+                            </td>
+                        }
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

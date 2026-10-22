@@ -1,0 +1,177 @@
+﻿@page
+@model RegisterModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<style>
+
+    body {
+        background: linear-gradient(135deg, #0d6efd, #6610f2);
+    }
+
+    .register-container {
+        min-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .register-card {
+        width: 100%;
+        max-width: 450px;
+        background: white;
+        padding: 35px;
+        border-radius: 15px;
+        box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
+    }
+
+    .register-title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: bold;
+        color: #0d6efd;
+        margin-bottom: 25px;
+    }
+
+    .form-control {
+        height: 50px;
+        border-radius: 10px;
+    }
+
+    .btn-register {
+        height: 50px;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        background: linear-gradient(90deg, #0d6efd, #6610f2);
+        border: none;
+        transition: 0.3s;
+    }
+
+        .btn-register:hover {
+            transform: scale(1.03);
+            opacity: 0.9;
+        }
+
+    .login-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+        .login-link a {
+            text-decoration: none;
+            color: #0d6efd;
+            font-weight: bold;
+        }
+
+</style>
+
+<div class="register-container">
+
+    <div class="register-card">
+
+        <div class="register-title">
+            Create Account
+        </div>
+
+        <form id="registerForm"
+              asp-route-returnUrl="@Model.ReturnUrl"
+              method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <!-- EMAIL -->
+
+            <div class="mb-3">
+
+                <label asp-for="Input.Email"
+                       class="form-label">
+                    Email Address
+                </label>
+
+                <input asp-for="Input.Email"
+                       class="form-control"
+                       autocomplete="username"
+                       placeholder="Enter email" />
+
+                <span asp-validation-for="Input.Email"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <!-- PASSWORD -->
+
+            <div class="mb-3">
+
+                <label asp-for="Input.Password"
+                       class="form-label">
+                    Password
+                </label>
+
+                <input asp-for="Input.Password"
+                       class="form-control"
+                       autocomplete="new-password"
+                       placeholder="Enter password" />
+
+                <span asp-validation-for="Input.Password"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="mb-3">
+
+                <label asp-for="Input.ConfirmPassword"
+                       class="form-label">
+                    Confirm Password
+                </label>
+
+                <input asp-for="Input.ConfirmPassword"
+                       class="form-control"
+                       autocomplete="new-password"
+                       placeholder="Confirm password" />
+
+                <span asp-validation-for="Input.ConfirmPassword"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <button id="registerSubmit"
+                    type="submit"
+                    class="w-100 btn btn-primary btn-register">
+
+                Register
+
+            </button>
+
+        </form>
+
+        <!-- LOGIN LINK -->
+
+        <div class="login-link">
+
+            Already have an account?
+
+            <a asp-page="./Login">
+                Login
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
